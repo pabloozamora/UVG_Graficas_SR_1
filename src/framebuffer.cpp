@@ -3,8 +3,8 @@
 #include "color.h"
 #include <vector>
 
-const int width = 1200;
-const int height = 700;
+const int width = 1300;
+const int height = 800;
 std::vector<Color> framebuffer;
 
 void clear(const Color& clearColor) {
@@ -14,8 +14,8 @@ void clear(const Color& clearColor) {
 
 void point(const glm::vec3 coordinates, const Color color) {
     
-    int x = static_cast<int>(coordinates.x);
-    int y = static_cast<int>(coordinates.y);
+    int x = static_cast<int>(coordinates.x) + width / 2;
+    int y = height / 2 - static_cast<int>(coordinates.y);
 
     if (x >= 0 && x < width && y >= 0 && y < height) {
         int index = y * width + x;

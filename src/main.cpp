@@ -1,17 +1,20 @@
 #include <SDL.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include "color.h"
 #include "objReader.h"
 #include "framebuffer.h"
 
-SDL_Window* window = SDL_CreateWindow("SR1", 150, 70, 1200, 700, 0);
+SDL_Window* window = SDL_CreateWindow("SR 1: Carga de modelos", 150, 70, 1300, 800, 0);
 SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 SDL_Event event;
 
-const std::string modelPath = "./test.obj";
+const int zoom = 60; //Agrandar modelo
+const std::string modelPath = "../src/Lab_3_Pablo_Zamora.obj";
 Color currentColor(255, 255, 255);
 Color clearColor(0, 0, 0);  // Color del fondo
+float rotationAngle = glm::radians(0.0f);
 
 std::vector<glm::vec3> vertices;
 std::vector<Face> faces;
@@ -33,18 +36,30 @@ void render(){
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
         SDL_RenderClear(renderer);
 
-        loadOBJ(modelPath, vertices, faces);
-        verticesArray = setupVertexArray(vertices, faces);
-        SDL_Log("hola");
-        SDL_Log("%f", vertices[0].x);
+        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotationAngle+=0.01, glm::vec3(0.0f, 1.0f, 0.0f));
+
+        clear(clearColor);
+
+        for (int i = 0; i*3 < verticesArray.size(); i++){
+            glm::vec4 rotatedVertex1 = glm::vec4(verticesArray[i*3], 1.0f) * rotationMatrix;
+            glm::vec4 rotatedVertex2 = glm::vec4(verticesArray[i*3+1], 1.0f) * rotationMatrix;
+            glm::vec4 rotatedVertex3 = glm::vec4(verticesArray[i*3+2], 1.0f) * rotationMatrix;
+            triangle(rotatedVertex1, rotatedVertex2, rotatedVertex3, currentColor);
+        };
+        
+        renderBuffer(renderer);
         SDL_RenderPresent(renderer);
-        SDL_Delay(100);
+
+        SDL_Delay(1);
     }
+
 }
 
 int main(int argv, char** args)
 {
     clear(clearColor);
+    loadOBJ(modelPath, vertices, faces, zoom);
+    verticesArray = setupVertexArray(vertices, faces);
     render();
     return 0;
 }
