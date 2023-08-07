@@ -6,7 +6,7 @@
 #include "objReader.h"
 #include "framebuffer.h"
 
-SDL_Window* window = SDL_CreateWindow("SR 1: Carga de modelos", 150, 70, 1300, 800, 0);
+SDL_Window* window = SDL_CreateWindow("SR 1: Carga de modelos", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1300, 800, 0);
 SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 SDL_Event event;
 
